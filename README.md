@@ -3,7 +3,9 @@ Home Assistant AppDaemon script to create sensor entity from Uni Stuttgart Wette
 
 ## Installation & Configuration
 
-1. Install the [Home Assistant AppDaemon 4 add-on][appdaemon4] (if not alredy installed)
+New: Steps 3-5 can be replaced with the [install script]. 
+
+1. Install the [Home Assistant AppDaemon 4 add-on][appdaemon4] (if not already installed)
 2. Add the required python packages to the add-on config
 ```
 python_packages:
@@ -31,3 +33,4 @@ usws:
 ```
 
 [appdaemon4]: https://github.com/hassio-addons/repository/tree/master/appdaemon
+[install script]: install.sh
