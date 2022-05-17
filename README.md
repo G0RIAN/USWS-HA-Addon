@@ -24,12 +24,12 @@ cat ./USWS-HA-Addon/apps.yaml >> /config/appdaemon/apps/apps.yaml
 or add it manually
 ```yaml
 usws:
-    module: usws
-    class: USWS
-    request_time_sec: 42        # at which second of every minute the sensor is updated 
-                                # (optional, defaults to randomly chosen value between 0 and 60)
-    sensor_name: "sensor.usws"  # name of the sensor entity to be created, 'sensor.' can be omitted 
-                                # (optional, defaults to "sensor.usws")
+  module: usws
+  class: USWS
+  request_time_sec: 42        # at which second of every minute the sensor is updated 
+                              # (optional, defaults to randomly chosen value between 0 and 60)
+  sensor_name: "sensor.usws"  # name of the sensor entity to be created, 'sensor.' can be omitted 
+                              # (optional, defaults to "sensor.usws")
 ```
 
 [appdaemon4]: https://github.com/hassio-addons/repository/tree/master/appdaemon
