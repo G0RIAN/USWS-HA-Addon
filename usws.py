@@ -59,18 +59,10 @@ class USWS(hass.Hass):
             except Exception as e:
                 print(e)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 1ff300cfaf90ed5303522555b33e656bd2c08d83
         self.sensor_data["wind speed"] = 0.0  # TODO: get wind speed (maybe from image?)
 
     def update_entity(self):
         attribs = self.sensor_data
-<<<<<<< HEAD
         attribs.pop("temperature", None)
-=======
-        attribs.pop("temperature")
->>>>>>> 1ff300cfaf90ed5303522555b33e656bd2c08d83
         self.get_entity(self.sensor_name).set_state(self.sensor_data["temperature"], attribs)
 
