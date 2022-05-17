@@ -73,4 +73,8 @@ class USWS(hass.Hass):
 
     def update_entity(self):
         attribs = self.sensor_data
+        attribs["device_class"] = "temperature"
+        attribs["state_class"] = "measurement"
+        attribs["unit_of_measurement"] = "°C"
+        attribs["friendly_name"] = "Uni Stuttgart Weather Sensor (USWS)"
         self.set_state(self.sensor_name, state=attribs.pop("temperature", "unknown"), attributes=attribs)
