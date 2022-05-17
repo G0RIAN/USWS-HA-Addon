@@ -9,7 +9,7 @@ import urllib3
 class USWS(hass.Hass):
 
     sensor_name = "sensor.usws"
-    request_time_sec = random.Random.randint(0, 60)
+    request_time_sec = random.Random().randint(0, 59)
     url = "https://lhg-902.iws.uni-stuttgart.de/"
     pool_manager = urllib3.PoolManager()
 
