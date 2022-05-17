@@ -40,7 +40,7 @@ class USWS(hass.Hass):
     def terminate(self):
         pass
 
-    def run_minutely_callback(self):
+    def run_minutely_callback(self, kwargs):
         response = self.pool_manager.request("GET", self.url)
         soup = BeautifulSoup(response.data())
         self.parse_weather_data(soup)
