@@ -1,5 +1,5 @@
 usws:
-module: usws
+  module: usws
   class: USWS
   request_time_sec: 42        # at which second of every minute the sensor is updated
                               # (optional, defaults to randomly chosen value between 0 and 60)
