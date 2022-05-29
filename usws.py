@@ -1,13 +1,21 @@
 import random
 import datetime
+import numpy as np
+import re
+import io
 
-import hassapi as hass
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import urllib.request
+import cv2
+from PIL import Image
+import pytesseract
+
+from hassapi import Hass
 
 
-class USWS(hass.Hass):
+class USWS(Hass):
 
     sensor_name = "sensor.usws"
     request_time_sec = random.Random().randint(0, 59)
@@ -57,7 +65,6 @@ class USWS(hass.Hass):
             "atmospheric long-wave radiation": "A_c",
             "terrestrial long-wave radiation": "E_c",
             "wind direction": "dd_c",
-            #  "wind speed": "???",
             "wind speed squall": "u_cmax"
         }
 
@@ -69,7 +76,40 @@ class USWS(hass.Hass):
             except Exception as e:
                 print(e)
 
-        self.sensor_data["wind speed"] = 0.0  # TODO: get wind speed (maybe from image?)
+        # get wind speed from image OCR
+        try:
+            # prepare image
+            wind_speed_url = soup.find("img", {"id": "wr_light_container"})['src']
+            with urllib.request.urlopen(self.url + wind_speed_url[1:]) as url:
+                resp = url.read()
+                tmp_img = io.BytesIO(resp)
+                img_open = Image.open(tmp_img)
+                img = np.asarray(img_open, dtype="uint8")[:, :, :-1]
+
+            # rotate image
+            image_center = tuple(np.array(img.shape[1::-1]) / 2)
+            rot_mat = cv2.getRotationMatrix2D(image_center, self.sensor_data["wind direction"] - 90, 1.0)
+            img_rot = cv2.warpAffine(img, rot_mat, img.shape[1::-1], flags=cv2.INTER_LINEAR)
+            cv2.imwrite("./test_rot.png", img_rot)
+
+            # crop image
+            cv2.imwrite("./test_rot_crop.png", img_rot[135:165, 80:220])
+
+            # use OCR to read wind speed
+            config = ('-l eng --oem 1 --psm 3')
+            text = pytesseract.image_to_string(img_rot[135:165, 80:220], config=config)
+            print(text)
+            re_matches = re.findall(r"\d?\d.\d", text)
+            if len(re_matches) == 1:
+                self.sensor_data["wind speed"] = float(re_matches[0])
+            elif len(re_matches) > 1:
+                print("Found more than 1 matching text string in image!")
+            else:
+                print("No text found")
+
+        except Exception as e:
+            self.sensor_data["wind speed"] = 0.0
+            print(e)
 
     def update_entity(self):
         attribs = self.sensor_data
